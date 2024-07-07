@@ -6,8 +6,12 @@ import { GoVerified } from 'react-icons/go';
 import millify from 'millify';
 import { baseUrl, fetchApi } from '../../utils/fetchApi';
 import ImageScrollbar from '../../components/ImageScrollbar';
+import DOMPurify from 'dompurify';
 
-const PropertyDetails = ({ propertyDetails: { price, rentFrequency, rooms, title, baths, area, agency, isVerified, description, type, purpose, furnishingStatus, amenities, photos } }) => (
+const PropertyDetails = ({ propertyDetails: { price, rentFrequency, rooms, title, baths, area, agency, isVerified, description, type, purpose, furnishingStatus, amenities, photos } }) => {
+  const htmlString = description || '';
+  const sanitizedHtmlString = DOMPurify.sanitize(htmlString);
+  return (
   <Box maxWidth='1000px' margin='auto' p='4'>
     {photos && <ImageScrollbar data={photos} />}
     <Box w='full' p='6'>
@@ -25,7 +29,7 @@ const PropertyDetails = ({ propertyDetails: { price, rentFrequency, rooms, title
     </Box>
     <Box marginTop='2'>
       <Text fontSize='lg' marginBottom='2' fontWeight='bold'>{title}</Text>
-      <Text lineHeight='2' color='gray.600'>{description}</Text>
+      <Text lineHeight='2' color='gray.600'><div dangerouslySetInnerHTML={{ __html: sanitizedHtmlString }} /></Text>
     </Box>
     <Flex flexWrap='wrap' textTransform='uppercase' justifyContent='space-between'>
       <Flex justifyContent='space-between' w='400px' borderBottom='1px' borderColor='gray.100' p='3'>
@@ -56,7 +60,8 @@ const PropertyDetails = ({ propertyDetails: { price, rentFrequency, rooms, title
         </Flex>
     </Box>
   </Box>
-);
+  )
+}
 
 export default PropertyDetails;
 
